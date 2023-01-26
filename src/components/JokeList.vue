@@ -15,7 +15,7 @@
     </div>
     <ul>
       <template v-for="joke in jokesList">
-      <li :key="joke.id" v-if="selectedJokeType === 'Any' ? true : joke.type === selectedJokeType" :class="setClass(joke.category,selectedJokeType,joke.isFavorite)">
+      <li :key="joke.id" v-if="(selectedJokeType === 'Any' || selectedJokeType === '') ? true : joke.type === selectedJokeType" :class="setClass(joke.category,selectedJokeType,joke.isFavorite)">
           <span>{{joke.type === 'single' ? joke.joke.split(' ').slice(0, 3).join(' ').replace(/\/r/, '/') : joke.setup.split(' ').slice(0, 3).join(' ').replace(/\/r/, '/')}}...</span>
           <button type="button" class="btn-green" @click="showModal(joke)">
             >>
@@ -42,10 +42,8 @@ export default {
       loading: true,
       isModalVisible: false,
       jokeType: ['Any','single','twopart'],
-      selected: '',
-      selectedJokeType:'Any',
-      visibleJokesCount:0,
-      initialJokeList:null
+      selectedJokeType:'',
+      visibleJokesCount:0
     }
   },
   mounted () {
@@ -64,13 +62,14 @@ export default {
           if(this.jokesList){
             this.jokesList = this.jokesList.filter(function(joke){ return joke.isFavorite === true })
             this.jokesList = this.compareArray(response.data.jokes,this.jokesList);
+            this.selectedJokeType = "Any";         
           }
           else{
             this.jokesList = response.data.jokes;
           } 
           
           this.visibleJokesCount = this.jokesList.length; 
-          this.selectedJokeType = "Any";         
+          
         })
         .catch(error => {
           console.log(error)
@@ -87,28 +86,14 @@ export default {
       },
       onJokeTypeChange(event) {
           this.selectedJokeType = event.target.value;
-          if(event.target.value === 'Any'){
+          if(event.target.value === 'Any' || event.target.value === ''){
             this.visibleJokesCount = this.jokesList.length;
           }
           else{            
             let filterJokes = this.jokesList.filter((joke) => joke.type === this.selectedJokeType);
             this.visibleJokesCount = filterJokes.length;
           }          
-      },
-      fetchNewJokes() {
-        axios
-        .get('https://v2.jokeapi.dev/joke/Programming,Pun,Misc,Spooky?safe-mode&amount=10')
-        .then(response => {
-          this.jokesList.push(...response.data.jokes);
-          this.jokesList = this.removeDuplicatesObject(this.jokesList);
-          this.visibleJokesCount = this.jokesList.length;
-        })
-        .catch(error => {
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => this.loading = false)
-      },
+      },      
       setClass(class1, class2, class3){
         return class1+" "+class2+" isFavorite"+class3;
       },
@@ -122,11 +107,6 @@ export default {
         }
         currentJokeArr.push(...newJokeArr);
         return currentJokeArr;
-      },
-      removeDuplicatesObject(arr) {        
-        const key = 'id';
-        const unique = [...new Map(arr.map(item => [item[key], item])).values()]
-        return unique;
       }
     }
 }
@@ -172,7 +152,7 @@ li.isFavoritetrue{
   box-shadow: 5px 5px #42b983;
 }
 select{
-  border: 1px solid #35495E;
+  border: 1px solid #41B883;
   border-radius: 4px;
   padding: 0.5em 0.6em;
   margin: 0 15px;
@@ -180,6 +160,7 @@ select{
   background: transparent;
   transition: background-color .5s;
   font-size: 16px;
+  color: #41B883;
 }
 .headerCls { 
   height: 100px;
