@@ -17,7 +17,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #41B883;
-  margin-top: 60px;
+  margin-top: 10px;
   font-size: 18px;
 }
 .btn-green {

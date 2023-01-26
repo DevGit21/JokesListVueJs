@@ -19,7 +19,7 @@
                 </div>
                 <div v-if="joke.type === 'twopart'">
                     {{ joke.setup }} <br />
-                    <a v-if="!showMoreData" @click="showMore()">Show More</a>
+                    <a v-if="!showMoreData" class="showMore" @click="showMore()">Show More..</a>
                     <div class="jokeDelivery" v-if="showMoreData">
                         <b>{{ joke.delivery }}</b><br />
                     </div>
@@ -67,7 +67,7 @@
 <style>
   .modal-backdrop {
     position: fixed;
-    font-size:25px;
+    font-size:20px;
     top: 0;
     bottom: 0;
     left: 0;
@@ -115,7 +115,7 @@
     top: 0;
     right: 0;
     border: none;
-    font-size: 25px;
+    font-size: 20px;
     padding: 10px;
     cursor: pointer;
     font-weight: bold;
@@ -144,5 +144,11 @@
   .modal-fade-enter-active,
   .modal-fade-leave-active {
     transition: opacity .5s ease;
+  }
+  .showMore{
+    color:blue;
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: underline;
   }
 </style>
